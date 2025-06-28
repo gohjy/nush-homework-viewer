@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* Default styles and whatnot */
+
+:root {
+    --custom-font: "Inter";
+    --info-hl-color: #FFFFFF44;
+    --highlight-color: transparent;
+
+    --subject-color: #888888;
+}
+
+html { 
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+body, html {
+    scrollbar-gutter: stable both-edges;
+    scrollbar-color: #ffffff88 transparent;
+}
+
+input, select, button { font-family: var(--body-font); font-size: inherit; }
+
+body > * {
+    overflow-x: auto;
+}
+
+h1:not(.big) { font-size: 2em; }
+h2:not(.big) { font-size: 1.5em; }
+
+a {
+    color: #00ffff;
+    text-decoration-line: underline;
+}
+
+noscript.fullscreen-noscript {
+    background: #FF9999;
+    color: black;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    z-index: 9999999999;
+}
+/*
+hr {
+    border: none;
+    border-top: 1px solid;
+} */
+
+/* Specific component styles */
+
+.cards-grid {
+    display: flex;
+    grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+    flex-flow: row wrap;
+    overflow-x: auto;
+    gap: 1em;
+
+    position: relative;
+}
+
+.cards-grid > .card {
+    width: 100%;
+    border-radius: 15px;
+    background-color: var(--highlight-color);
+    padding: 15px;
+    text-align: left;
+
+    border: 2px solid var(--subject-color);
+}
+.card.info {
+    background-color: var(--info-hl-color);
+    font-weight: bold;
+}
+
+.cards-grid > .card > :first-child { margin-top: 0; }
+.cards-grid > .card > :last-child { margin-bottom: 0; }
+
+.el { --subject-color: #6666ff; }
+.ma { --subject-color: #336633; }
+.mt { --subject-color: #880000; }
+.pc { --subject-color: #00bbff; }
+.cm { --subject-color: #dc82ff; }
+.bl { --subject-color: #999900; }
+
+.error {
+    background-color: #ff000088;
+}
+
+.break {
+    width: 100%;
+}
+
+.grey {
+    color: grey;
+}

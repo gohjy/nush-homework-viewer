@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSH Homework Viewer</title>
+    <link href="https://gohjy.github.io/base-css/css/main.css" rel="stylesheet">
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <header class="hero">
+        <h1 class="textcent">NUSH Homework Viewer</h1>
+    </header>
+    
+    <section class="input-holder">
+        <p>
+            Enter a homework URL:
+            <br>
+            <input class="full-width" type="url" placeholder="https://example.com/homework.json" id="urlInput">
+        </p>
+        <p>
+            <button class="full-width" id="goBtn">
+                Load homework
+            </button>
+        </p>
+        <p class="error bold" id="error">
+
+        </p>
+    </section>
+
+    <hr><br>
+
+    <main>
+        <div class="cards-grid" id="grid">
+
+        </div>
+    </main>
+
+    <section id="shareCont" class="invisible">
+        <p>
+            Share this page:
+            <input class="full-width" readonly id="shareLink">
+        </p>
+    </section>
+
+    <script src="./script.js" type="module"></script>
+</body>
+</html>
