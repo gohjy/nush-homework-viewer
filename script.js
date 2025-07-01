@@ -50,7 +50,7 @@ const newCard = ({subject, courseCode, classId, item}) => {
 
         if (item.type === "homework") {
             const due = document.createElement("p");
-            due.textContent = `Due date: ${dateToTime(new Date(item.dueDate + "+08:00"))}`;
+            due.textContent = `Due date: ${item.dueDate ? dateToTime(new Date(item.dueDate + "+08:00")) : "unknown"}`;
             card.append(due);
         } else if (item.type === "info") {
             card.classList.add("info");
