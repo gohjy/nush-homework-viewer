@@ -40,16 +40,21 @@ const newCard = ({subject, courseCode, classId, item}) => {
 
     if (item.type === "homework" || item.type === "info") {
         const content = document.createElement("p");
-        content.textContent = item.content + 
-        (item.optional ? " (optional)" : "");
+        const contentLines = (item.content + 
+        (item.optional ? " (optional)" : "")).split("\n");
+        for (let ix of contentLines) {
+            content.append(ix, document.createElement("br"));
+        }
+        content.lastElementChild.remove(); // remove last <br>
         content.innerHTML = content.innerHTML.replaceAll(
-            /https\:\/\/v\.gd\/[a-zA-z0-9_]+/g,
+            /\bhttps\:\/\/v\.gd\/[a-zA-z0-9_]+/g,
             `<a href="$&-" target="_blank">$&</a>`
         );
         card.append(content);
 
         if (item.type === "homework") {
             const due = document.createElement("p");
+            due.classList.add("small");
             due.textContent = `Due date: ${item.dueDate ? dateToTime(new Date(item.dueDate + "+08:00")) : "unknown"}`;
             card.append(due);
         } else if (item.type === "info") {
@@ -60,12 +65,11 @@ const newCard = ({subject, courseCode, classId, item}) => {
     }
 
     if (cardType) {
-        /*if (grid.lastElementChild && grid.lastElementChild.dataset.courseCode !== courseCode) {
+        if (grid.lastElementChild && grid.lastElementChild.dataset.courseCode !== courseCode) {
             const breakElem = document.createElement("div");
             breakElem.classList.add("break");
-            breakElem.innerHTML = "&nbsp;";
             grid.append(breakElem);
-        } */
+        } 
         grid.append(card);
     };
 }
