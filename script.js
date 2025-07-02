@@ -33,7 +33,7 @@ const newCard = ({subject, courseCode, classId, item}) => {
 
     const meta = document.createElement("p");
     meta.classList.add("small", "grey");
-    meta.textContent = `${courseCode}: ${subject} (${classId})`;
+    meta.textContent = courseCode.toUpperCase().slice(0, 2) === "CE" ? `${classId} Mentoring/CCE` : `${courseCode}: ${subject} (${classId})`;
     card.append(meta);
 
     let cardType = 1;
