@@ -14,15 +14,24 @@ const dateToTime = (dateObj) => {
         ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]
     } ${
         dateObj.getFullYear()
+    }${
+        dateObj.getHours() 
+        ? ` ${
+            dateObj.getHours().toString().padStart(2, "0")
+        }:${
+            dateObj.getMinutes().toString().padStart(2, "0")
+        }` : ""
     }`;
 }
+
+const makeCourseText = ({courseCode, classID, subject}) => courseCode.toUpperCase().slice(0, 2) === "CE" ? `${classID} Mentoring/CCE` : `${courseCode}: ${subject} (${classID})`
 
 const grid = document.querySelector("#grid");
 const input = document.querySelector("#urlInput");
 const button = document.querySelector("#goBtn");
 const errorSpace = document.querySelector("#error");
 
-const newCard = ({subject, courseCode, classId, item}) => {
+const newCard = ({subject, courseCode, classID, item}) => {
     const card = document.createElement("div");
     card.classList.add("card");
     card.classList.add(
@@ -32,30 +41,43 @@ const newCard = ({subject, courseCode, classId, item}) => {
     );
 
     const meta = document.createElement("p");
-    meta.classList.add("small", "grey");
-    meta.textContent = courseCode.toUpperCase().slice(0, 2) === "CE" ? `${classId} Mentoring/CCE` : `${courseCode}: ${subject} (${classId})`;
+    meta.classList.add("small", "grey", "meta-ind");
+    meta.textContent = makeCourseText({courseCode, classID, subject});
     card.append(meta);
 
-    let cardType = 1;
+    // let cardType = 1;
 
     if (item.type === "homework" || item.type === "info") {
         const content = document.createElement("p");
+        const contentDiv = document.createElement("div");
         const contentLines = (item.content + 
         (item.optional ? " (optional)" : "")).split("\n");
         for (let ix of contentLines) {
-            content.append(ix, document.createElement("br"));
+            contentDiv.append(ix, document.createElement("br"));
         }
-        content.lastElementChild.remove(); // remove last <br>
-        content.innerHTML = content.innerHTML.replaceAll(
-            /\bhttps\:\/\/v\.gd\/[a-zA-z0-9_]+/g,
+        // content.lastElementChild.remove(); // remove last <br>
+        contentDiv.innerHTML = contentDiv.innerHTML.replaceAll(
+            /\bhttps\:\/\/v\.gd\/[a-zA-Z0-9_]+/g,
             `<a href="$&-" target="_blank">$&</a>`
         );
+        content.append(contentDiv);
+        content.classList.add("main-item-content");
         card.append(content);
 
         if (item.type === "homework") {
+            card.classList.add("homework");
             const due = document.createElement("p");
-            due.classList.add("small");
-            due.textContent = `Due date: ${item.dueDate ? dateToTime(new Date(item.dueDate + "+08:00")) : "unknown"}`;
+            due.classList.add("small", "due-ind");
+
+            const dueInfoText = document.createElement("span");
+            dueInfoText.classList.add("due-info-span");
+            dueInfoText.textContent = "Due date:";
+
+            const dueSpan = document.createElement("span");
+            dueSpan.classList.add("due-span");
+            dueSpan.textContent = item.dueDate ? dateToTime(new Date(item.dueDate + "+08:00")) : "Unknown";
+
+            due.append(dueInfoText, " ", dueSpan);
             card.append(due);
         } else if (item.type === "info") {
             card.classList.add("info");
@@ -64,14 +86,16 @@ const newCard = ({subject, courseCode, classId, item}) => {
         card.dataset.courseCode = courseCode;
     }
 
-    if (cardType) {
+    return card;
+
+    /* if (cardType) {
         if (grid.lastElementChild && grid.lastElementChild.dataset.courseCode !== courseCode) {
             const breakElem = document.createElement("div");
             breakElem.classList.add("break");
             grid.append(breakElem);
         } 
         grid.append(card);
-    };
+    }; */
 }
 
 const fetchData = async (url) => {
@@ -116,24 +140,57 @@ const loadData = async () => {
     grid.innerHTML = "";
 
     for (let obj of data.homeworkData.sort(
-        (a, b) => a.courseCode > b.courseCode ? 1 : (a.courseCode === b.courseCode ? 0 : -1)
+        (a, b) => {
+            const x = ((a, b) => {
+                if (a.courseCode.match(/^ce/i)) return -1;
+                if (b.courseCode.match(/^ce/i)) return 1;
+                if (a.courseCode > b.courseCode) return 1;
+                if (a.courseCode === b.courseCode) return 0;
+                return -1;
+            })(a, b);
+            
+            console.log(x, a.courseCode, b.courseCode);
+            return x;
+        }
     )) {
+        console.info(obj);
         if (obj.proxy) {
 
         }
+
+        const subjectCardsHolder = document.createElement("div");
+        subjectCardsHolder.classList.add("subject-group");
+
+        const infoBox = document.createElement("div");
+        infoBox.classList.add("group-info-box");
+        infoBox.textContent = makeCourseText(obj);
+        subjectCardsHolder.append(infoBox);
+
+        const cardsHolder = document.createElement("div");
+        cardsHolder.classList.add("card-group");
+
         for (let item of obj.items.sort((a, b) => {
             const sortOrder = ["info", "homework"];
             return sortOrder.indexOf(a.type) - sortOrder.indexOf(b.type);
         })) {
-            console.log(item);
-            newCard({
+            console.log(item);            
+
+            cardsHolder.append(newCard({
                 subject: obj.subject,
                 courseCode: obj.courseCode,
-                classId: obj.classID,
+                classID: obj.classID,
                 item: item
-            });
+            }));
         }
+        
+        subjectCardsHolder.append(cardsHolder);
+        grid.append(subjectCardsHolder);
+
+        const breakElem = document.createElement("div");
+        breakElem.classList.add("break");
+        grid.append(breakElem);
     }
+    grid.lastElementChild.remove();
     errorSpace.textContent = "";
     document.querySelector("#shareCont").classList.remove("invisible");
 
