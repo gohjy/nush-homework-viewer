@@ -3,6 +3,17 @@
 
 /* Default styles and whatnot */
 
+@media print {
+    :root {
+        --text-color: black;
+        --bg-color: white;
+
+        --subject-color: #000000;
+        --info-hl-color: transparent;
+        --highlight-color: transparent;
+    }
+}
+
 :root {
     --custom-font: "Inter";
     --info-hl-color: #FFFFFF44;

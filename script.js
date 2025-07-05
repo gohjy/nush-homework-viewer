@@ -1,3 +1,18 @@
+(() => {
+    if (location.search) {
+        for (let link of document.querySelectorAll(".hero p a")) {
+            link.href += location.search;
+        }
+    }
+})();
+
+const OPTIONS = globalThis.__OPTIONS ?? {};
+OPTIONS.cardGroupElem ?? (OPTIONS.cardGroupElem = "div");
+OPTIONS.cardElem ?? (OPTIONS.cardElem = "div");
+OPTIONS.cardContentElem ?? (OPTIONS.cardContentElem = "p");
+OPTIONS.breakElem ?? (OPTIONS.breakElem = "div");
+console.log(OPTIONS);
+
 const MTLdepts = [
     "BG", "CH", "CL", 
     "GJ", "GM", "UD",
@@ -32,7 +47,7 @@ const button = document.querySelector("#goBtn");
 const errorSpace = document.querySelector("#error");
 
 const newCard = ({subject, courseCode, classID, item}) => {
-    const card = document.createElement("div");
+    const card = document.createElement(OPTIONS.cardElem);
     card.classList.add("card");
     card.classList.add(
         MTLdepts.includes(courseCode.slice(0, 2))
@@ -40,7 +55,7 @@ const newCard = ({subject, courseCode, classID, item}) => {
         : courseCode.slice(0, 2).toLowerCase()
     );
 
-    const meta = document.createElement("p");
+    const meta = document.createElement(OPTIONS.cardContentElem);
     meta.classList.add("small", "grey", "meta-ind");
     meta.textContent = makeCourseText({courseCode, classID, subject});
     card.append(meta);
@@ -48,7 +63,7 @@ const newCard = ({subject, courseCode, classID, item}) => {
     // let cardType = 1;
 
     if (item.type === "homework" || item.type === "info") {
-        const content = document.createElement("p");
+        const content = document.createElement(OPTIONS.cardContentElem);
         const contentDiv = document.createElement("div");
         const contentLines = (item.content + 
         (item.optional ? " (optional)" : "")).split("\n");
@@ -66,7 +81,7 @@ const newCard = ({subject, courseCode, classID, item}) => {
 
         if (item.type === "homework") {
             card.classList.add("homework");
-            const due = document.createElement("p");
+            const due = document.createElement(OPTIONS.cardContentElem);
             due.classList.add("small", "due-ind");
 
             const dueInfoText = document.createElement("span");
@@ -166,7 +181,7 @@ const loadData = async () => {
         infoBox.textContent = makeCourseText(obj);
         subjectCardsHolder.append(infoBox);
 
-        const cardsHolder = document.createElement("div");
+        const cardsHolder = document.createElement(OPTIONS.cardGroupElem);
         cardsHolder.classList.add("card-group");
 
         for (let item of obj.items.sort((a, b) => {
@@ -186,7 +201,7 @@ const loadData = async () => {
         subjectCardsHolder.append(cardsHolder);
         grid.append(subjectCardsHolder);
 
-        const breakElem = document.createElement("div");
+        const breakElem = document.createElement(OPTIONS.breakElem);
         breakElem.classList.add("break");
         grid.append(breakElem);
     }

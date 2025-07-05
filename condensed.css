@@ -2,25 +2,36 @@
 @import url('https://gohjy.github.io/base-css/css/main.css');
 @import url('./main.css');
 
+@media print {
+    .cards-grid {
+        font-size: .8em !important;
+    }
+}
+
 /* Specific component styles */
 
 .cards-grid {
     display: flex;
     flex-flow: column nowrap;
-    overflow-x: hidden;
+
+    width: fit-content;
+    min-width: 100%;
 
     position: relative;
+
+    font-size: min(1em, 3vw);
 }
 
 .subject-group {
     display: flex;
     flex-flow: row nowrap;
-    overflow-x: auto;
     position: relative;
     align-items: center;
 
     border: 2px solid;
     border-bottom: none;
+
+    break-inside: avoid;
 }
 
 .cards-grid .card {
@@ -37,14 +48,7 @@
     justify-content: space-between;
 }
 
-.card:first-child {
-    /* border-top-right-radius: 15px;
-    border-top-left-radius: 15px; */
-}
-
 .card:last-child {
-    /* border-bottom-right-radius: 15px;
-    border-bottom-left-radius: 15px; */
     border-bottom: none;
 }
 
@@ -55,30 +59,24 @@
 .card.info {
     text-align: center;
     justify-content: center;
+
+    font-weight: bold;
 }
 
 .due-ind {
     min-width: 5em;
-    width: 5em;
-    max-width: 5em;
+    max-width: 10em;
     margin-left: 1em;
 
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    text-align: right;
 }
 
 .due-info-span {
     display: none;
-}
-
-.subject-group:first-child > .card-group {
-    /* border-radius: 15px 15px 0 0; */
-}
-
-.subject-group:last-child > .card-group {
-    /* border-radius: 0 0 15px 15px; */
-    /* border-bottom: 2px solid; */
 }
 
 .subject-group:last-child {
@@ -96,6 +94,10 @@
 
 .group-info-box {
     width: 10em;
+    /* width: min(10em, 30vw);
+    min-width: min(10em, 30vw);
+    max-width: min(10em, 30vw); */
+    word-break: break-word;
     height: 100%;
     text-align: center;
 }
