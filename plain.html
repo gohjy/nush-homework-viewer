@@ -63,7 +63,7 @@
 </head>
 <body>
     <header class="hero">
-        <h1 class="textcent">NUSH Homework Viewer</h1>
+        <h1 class="textleft">NUSH Homework Viewer</h1>
         <p>
             View:
             <a href="./">Normal</a>
@@ -87,7 +87,7 @@
             </button>
         </p>
         <br>
-        <p class="error bold" id="error">
+        <p class="error bold" id="error" style="background-color: #ff000088;">
 
         </p>
     </section>
@@ -121,7 +121,7 @@
         const BOLD_DELIM = "*";
         const LIST_PREFIX = "- ";
 
-        const textToWhatsapp = () => {
+        const textToCopy = ({BOLD_DELIM = "*", LIST_PREFIX = "- "}) => {
             const grid = document.querySelector(".cards-grid");
             let text = [];
             // This array will be joined with newline separator later
@@ -148,7 +148,6 @@
                         text.push(itemText);
                     }
 
-                    text.push(" ");
                 }
             }
 
@@ -170,7 +169,7 @@
                 }, 1500);
             }
             try {
-                text = textToWhatsapp();
+                text = textToCopy({BOLD_DELIM, LIST_PREFIX});
             } catch {
                 setText("Failed to copy!");
                 return;
