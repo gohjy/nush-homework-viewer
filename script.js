@@ -173,6 +173,8 @@ const loadData = async () => {
 
         }
 
+        if (!obj.items.length) continue;
+
         const subjectCardsHolder = document.createElement("div");
         subjectCardsHolder.classList.add("subject-group");
 
